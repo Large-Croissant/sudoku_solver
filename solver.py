@@ -2,6 +2,11 @@ import os
 import pyautogui as pag
 
 def get_board() -> list:
+    """
+    Asks the user to input each line of the Sudoku board
+
+    :return: A 2D list of the Sudoku board
+    """
     board = []
     for row in range(9):
         line = list(input(f"Enter line {row + 1} with space for blanks: "))
@@ -13,6 +18,11 @@ def get_board() -> list:
     return board
 
 def print_board(board: list) -> None:
+    """
+    Displays the given board to the screen
+
+    :param board: The board to be displayed
+    """
     for row_num, row in enumerate(board):
         for num_num, num in enumerate(row):
             if num_num == 2 or num_num == 5:
@@ -23,13 +33,27 @@ def print_board(board: list) -> None:
         if row_num == 2 or row_num == 5:
             print("-----------")
 
-def has_in_row(board, row_num) -> list:
+def has_in_row(board: list, row_num: int) -> list:
+    """
+    Finds the numbers in the given row
+
+    :param board: The board to search
+    :param row_num: The row to search
+    :return: A list of the numbers in the given row
+    """
     has = board[row_num].copy()
     while " " in has:
         has.remove(" ")
     return has
 
-def has_in_col(board, col_num) -> list:
+def has_in_col(board: list, col_num: int) -> list:
+    """
+    Finds the numbers in the given column
+
+    :param board: The board to search
+    :param col_num: The column to search
+    :return: A list of the numbers in the given column
+    """
     has = []
     for row_num in range(len(board)):
         has.append(board[row_num][col_num])
@@ -37,7 +61,15 @@ def has_in_col(board, col_num) -> list:
         has.remove(" ")
     return has
 
-def has_in_square(board, row_num, col_num) -> list:
+def has_in_square(board: list, row_num: int, col_num: int) -> list:
+    """
+    Finds the numbers in the square of the row and col specified
+
+    :param board: The board to search
+    :param row_num: The row to search the square in
+    :param col_num: The column to search the square in
+    :return: A list of the numbers in the specified square
+    """
     row_sq_num = int(row_num/3)
     col_sq_num = int(col_num/3)
     has = []
@@ -48,7 +80,13 @@ def has_in_square(board, row_num, col_num) -> list:
         has.remove(" ")
     return has
 
-def get_candidates(unsolved) -> set:
+def get_candidates(unsolved: list) -> list:
+    """
+    Gets the candidate numbers for the board
+
+    :param unsolved: The unsolved board
+    :return: A board with candidate numberes filled in
+    """
     candidates = [[ [] for _ in range(9)] for _ in range(9)]
     for row_num, row in enumerate(unsolved):
         for col_num, num in enumerate(row):
@@ -61,7 +99,14 @@ def get_candidates(unsolved) -> set:
                 candidates[row_num][col_num] = needs - has
     return candidates
 
-def solve_iter(board, candidates):
+def solve_iter(board, candidates) -> list:
+    """
+    Does a single iteration of solving
+
+    :param board: The board to solve
+    :param candidates: The current candidate list
+    :return: The new board after solving with one iteration
+    """
     #fill single candidates
     new_board = []
     for row in board:
@@ -75,11 +120,17 @@ def solve_iter(board, candidates):
                      did_cand_solve = True
     if did_cand_solve:
         candidates = get_candidates(new_board)
-    #do elimination solve
+    #TODO:do elimination solve
 
     return new_board
 
-def is_solved(board) -> bool:
+def is_solved(board: list) -> bool:
+    """
+    Checks if the board is solved
+
+    :param board: The board to check
+    :return: True if solved, False otherwise
+    """
     #check filled
     for row in board:
         for num in row:
